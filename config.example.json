@@ -1,0 +1,16 @@
+{
+    "bot_token": "",
+    "owner_id": "",
+    "prefix": ";",
+    "client_id": "",
+    "client_secret": "",
+    "hosting_url": "http://localhost:8080",
+    "server_ip": "0.0.0.0",
+    "server_port": 8080,
+    "mongodb_url": "mongodb://localhost/wrm",
+    "server_id": "",
+    "socket_url": "localhost",
+    "version": "2.0a",
+    "wrm_rolename": "[Staff]",
+    "wrm_ticketchannel": "reports"
+}
