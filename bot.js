@@ -6,6 +6,9 @@ const config = require("./config.json");
 
 const WebSocket = require("ws");
 const WebSocketServer = WebSocket.Server;
+const wsMessageEvent = require("./ws_events/message");
+
+const driver = require("./database/driver");
 
 var wss = new WebSocketServer({
     port: 8080
@@ -16,7 +19,7 @@ var wss = new WebSocketServer({
 
 wss.on("connection", ws => {
     ws.on("message", (message) => {
-        console.log(JSON.parse(message));
+        wsMessageEvent(message);
     });
 });
 
@@ -39,6 +42,8 @@ client.on("ready", () => {
             url: "https://twitch.tv/"
         }
     });
+
+    driver.init();
 });
 
 client.on("messageReactionAdd", messageReactionAdd.event);
