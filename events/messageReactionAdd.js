@@ -1,9 +1,9 @@
 const WebSocket = require("ws");
 const getUrls = require("get-urls");
 
-const config = require("./../config.json")
+const config = require("../config.json")
 
-const findOne = require("./../util/findOne");
+const findOne = require("../util/findOne");
 const findOneAndRemove = require("./../util/findOneAndRemove");
 
 var ws;

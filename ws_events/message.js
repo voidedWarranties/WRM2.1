@@ -1,4 +1,4 @@
-const Ticket = require("./../database/models/ticket");
+const Ticket = require("../database/models/ticket");
 
 module.exports = (message) => {
     var JSONMessage = JSON.parse(message);

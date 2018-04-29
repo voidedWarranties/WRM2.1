@@ -1,6 +1,6 @@
 const { Command } = require("discord.js-commando");
 
-const findOne = require("./../../util/findOne");
+const findOne = require("../../util/findOne");
 
 module.exports = class FindOneCommand extends Command {
     constructor(client) {

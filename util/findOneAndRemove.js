@@ -1,4 +1,4 @@
-const Ticket = require("./../database/models/ticket");
+const Ticket = require("../database/models/ticket");
 
 module.exports = (id) => {
     return Ticket.findOneAndRemove({
