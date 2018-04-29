@@ -43,6 +43,13 @@ client.on("ready", () => {
         }
     });
 
+    client.registry
+    .registerDefaultTypes()
+    .registerGroups([
+        ["wrm2", "Wonderland Report Manager Reloaded"]
+    ])
+    .registerCommandsIn(path.join(__dirname, "commands"));
+
     driver.init();
 });
 
