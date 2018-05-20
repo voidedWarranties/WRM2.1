@@ -6,22 +6,12 @@ const config = require("./config.json");
 
 const WebSocket = require("ws");
 const WebSocketServer = WebSocket.Server;
+const wsConnectionEvent = require("./ws_events/connection");
 const wsMessageEvent = require("./ws_events/message");
 
 const driver = require("./database/driver");
 
-var wss = new WebSocketServer({
-    port: 8080
-}, () => {
-    console.log("WSS Init");
-    messageReactionAdd.init(client);
-});
-
-wss.on("connection", ws => {
-    ws.on("message", (message) => {
-        wsMessageEvent(message);
-    });
-});
+const webServer = require("./web/index");
 
 // Events
 const messageReactionAdd = require("./events/messageReactionAdd");
@@ -51,8 +41,32 @@ client.on("ready", () => {
     .registerCommandsIn(path.join(__dirname, "commands"));
 
     driver.init();
-});
 
-client.on("messageReactionAdd", messageReactionAdd.event);
+    webServer.start(client, (server) => {
+        console.log("WSS Callback");
+        var wss = new WebSocketServer({ server });
+
+        wss.broadcast = (data) => {
+            wss.clients.forEach((client) => {
+                if(client.readyState === WebSocket.OPEN) {
+                    client.send(JSON.stringify(data));
+                }
+            });
+        }
+
+        console.log("WSS Init");
+        client.on("messageReactionAdd", (messageReaction, user) => {
+            messageReactionAdd.event(client, wss, messageReaction, user);
+        });
+        
+        wss.on("connection", ws => {
+            // console.log("[ws] New connection");
+            wsConnectionEvent(ws);
+            ws.on("message", (message) => {
+                wsMessageEvent(client, message, wss);
+            });
+        });
+    });
+});
 
 client.login(config.bot_token);

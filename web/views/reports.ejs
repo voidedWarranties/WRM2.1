@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Reports - WRM2</title>
+
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+        <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+        <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+    </head>
+    <body style="margin: 10px;">
+        <% include imports/header %>
+        <script src="https://cdn.rawgit.com/posva/vue-mdc/mdl/dist/vue-mdl.min.js"></script>
+        <div id="app">
+            <div class="ticket" v-for="ticket in tickets">
+                <div class="userinfo">
+                    <img :src="ticket.message.author.avatar" style="border-radius: 100%; width: 32px; height: 32px; vertical-align: middle; display: inline;">
+                    <span>{{ ticket.message.author.username }}#{{ ticket.message.author.discriminator }} ({{ ticket.message.author.id }}):</span>
+                </div>
+
+                <p>{{ ticket.message.content }}</p>
+                <div class="url-images" v-if="ticket.message.urls">
+                    <div class="url-image" v-for="url in ticket.message.urls" v-if="url.endsWith('.jpg') || url.endsWith('.jpeg') || url.endsWith('.png') || url.endsWith('.gif')">
+                        <img :src="url" style="max-width: 500px;">
+                    </div>
+                </div>
+
+                <div class="attachments" v-if="ticket.message.attachments">
+                    <div class="attachment-image" v-for="attachment in ticket.message.attachments">
+                        <img :src="attachment" style="max-width: 500px;">
+                    </div>
+                </div>
+
+                <div class="buttons">
+                    <mdl-button :id="'resolve'+ticket.message.id" icon="check" v-on:click.native="normalHandling('resolve', ticket.message.id)"><i class="material-icons">check</i></mdl-button>
+                    <mdl-button :id="'falsify'+ticket.message.id" icon="close" v-on:click.native="normalHandling('falsify', ticket.message.id)"><i class="material-icons">close</i></mdl-button>
+                    <mdl-button :id="'move'+ticket.message.id" icon="arrow_right" v-on:click.native="normalHandling('move', ticket.message.id)"><i class="material-icons">arrow_right</i></mdl-button>
+                    <mdl-button :id="'investigate'+ticket.message.id" icon="search" v-on:click.native="updateHandling('investigate', ticket.message.id)"><i class="material-icons">search</i></mdl-button>
+                    <mdl-button :id="'delete'+ticket.message.id" icon="delete" v-on:click.native="normalHandling('delete', ticket.message.id)"><i class="material-icons">delete</i></mdl-button>
+
+                    <mdl-tooltip :target="'resolve'+ticket.message.id">Resolve</mdl-tooltip>
+                    <mdl-tooltip :target="'falsify'+ticket.message.id">Falsify</mdl-tooltip>
+                    <mdl-tooltip :target="'move'+ticket.message.id">Move to #general</mdl-tooltip>
+                    <mdl-tooltip :target="'investigate'+ticket.message.id">Investigate</mdl-tooltip>
+                    <mdl-tooltip :target="'delete'+ticket.message.id">Delete</mdl-tooltip>
+                </div>
+                <hr>
+            </div>
+        </div>
+
+        <script src="https://vuejs.org/js/vue.min.js"></script>
+        <script>
+            var socketURL = "<%= config.socket_url %>";
+            var serverPort = "<%= config.server_port %>";
+
+            var ws = new WebSocket(`ws://${socketURL}:${serverPort}`);
+
+            var app = new Vue({
+                el: "#app",
+                data: {
+                    tickets: []
+                },
+                methods: {
+                    normalHandling: (action, id) => {
+                        ws.send(JSON.stringify({
+                            type: "remove",
+                            action,
+                            id
+                        }));
+                    },
+                    updateHandling: (action, id) => {
+                        ws.send(JSON.stringify({
+                            type: "update",
+                            action,
+                            id
+                        }));
+                    }
+                },
+                components: VueMdl.components,
+                directives: VueMdl.directives
+            });
+
+            var process = (newTickets) => {
+                for(i in newTickets) {
+                    app.tickets.push(newTickets[i]);
+                }
+            }
+
+            ws.addEventListener("message", function(event) {
+                var JSONData = JSON.parse(event.data);
+
+                if(JSONData.type === "connect") {
+                    app.tickets = JSONData.tickets;
+                }
+
+                if(JSONData.type === "new") {
+                    app.tickets.push(JSONData);
+                }
+
+                if(JSONData.type === "remove") {
+                    app.tickets = app.tickets.filter((ticket) => {
+                        return ticket.message.id !== JSONData.id;
+                    });
+                }
+            });
+        </script>
+    </body>
+</html>

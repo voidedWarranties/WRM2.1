@@ -3,17 +3,18 @@ const getUrls = require("get-urls");
 
 const config = require("../config.json")
 
+const Ticket = require("../database/models/ticket");
 const findOne = require("../util/findOne");
 const findOneAndRemove = require("./../util/findOneAndRemove");
 
-var ws;
-var client;
-exports.init = (client) => {
-    this.client = client;
-    ws = new WebSocket("ws://localhost:8080");
-}
+// var wss;
+// var client;
+// exports.init = (client, wss) => {
+//     this.client = client;
+//     this.wss = wss;
+// }
 
-exports.event = async (messageReaction, user) => {
+exports.event = async (client, wss, messageReaction, user) => {
     var message = messageReaction.message;
     var emoji = messageReaction.emoji;
     var author = message.author;
@@ -21,7 +22,7 @@ exports.event = async (messageReaction, user) => {
 
     var member = guild.members.find("id", user.id);
 
-    if(user === this.client.user) {
+    if(user === client.user) {
         return;
     }
     if(!(user === message.author) && !(member.roles.find("name", config.wrm_rolename))) {
@@ -29,8 +30,10 @@ exports.event = async (messageReaction, user) => {
     }
 
     if(emoji.name === "🎫" && !messageReaction.me) {
+
         message.react("🎫");
-        ws.send(JSON.stringify({
+
+        var dataObj = {
             message: {
                 author: {
                     username: author.username,
@@ -44,7 +47,35 @@ exports.event = async (messageReaction, user) => {
                 id: message.id
             },
             type: "new"
-        }));
+        };
+
+        wss.broadcast(dataObj);
+
+        var messageObj = dataObj.message;
+        var authorObj = messageObj.author;
+
+        const ticket = new Ticket({
+            message: {
+                author: {
+                    username: authorObj.username,
+                    discriminator: authorObj.discriminator,
+                    id: authorObj.id,
+                    avatar: authorObj.avatar
+                },
+                content: messageObj.content,
+                urls: messageObj.urls,
+                attachments: messageObj.attachments,
+                id: messageObj.id
+            }
+        });
+
+        ticket.save((err, newTicket) => {
+            if(err) {
+                console.error(err);
+            }
+
+            console.log("New ticket!");
+        });
 
         // Resolve
         await message.react("✅");
@@ -68,6 +99,11 @@ exports.event = async (messageReaction, user) => {
         message.reply(messageToSend);
         await message.clearReactions();
         await message.react(moji);
+
+        wss.broadcast({
+            type: "remove",
+            id: message.id
+        });
     }
 
     if(member.roles.find("name", config.wrm_rolename) && message.reactions.find(reaction => reaction.emoji.name === "🎫") && messageReaction.me) {
@@ -88,6 +124,11 @@ exports.event = async (messageReaction, user) => {
             case "❌":
                 findOneAndRemove(message.id).exec();
                 await message.clearReactions();
+
+                wss.broadcast({
+                    type: "remove",
+                    id: message.id
+                });
         }
     }
 }
