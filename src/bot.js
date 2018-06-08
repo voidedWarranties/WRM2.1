@@ -42,12 +42,12 @@ client.on("ready", () => {
 
     driver.init();
 
-    webServer.start(client, (server) => {
+    webServer.start(client, server => {
         console.log("WSS Callback");
         var wss = new WebSocketServer({ server });
 
-        wss.broadcast = (data) => {
-            wss.clients.forEach((client) => {
+        wss.broadcast = data => {
+            wss.clients.forEach(client => {
                 if(client.readyState === WebSocket.OPEN) {
                     client.send(JSON.stringify(data));
                 }
@@ -62,7 +62,7 @@ client.on("ready", () => {
         wss.on("connection", ws => {
             // console.log("[ws] New connection");
             wsConnectionEvent(ws);
-            ws.on("message", (message) => {
+            ws.on("message", message => {
                 wsMessageEvent(client, message, wss);
             });
         });
