@@ -36,7 +36,8 @@ client.on("ready", () => {
     client.registry
     .registerDefaultTypes()
     .registerGroups([
-        ["wrm2", "Wonderland Report Manager Reloaded"]
+        ["wrm2", "Wonderland Report Manager Reloaded"],
+        ["wonderland-legacy", "Wonderland's features in JS"]
     ])
     .registerCommandsIn(path.join(__dirname, "commands"));
 
