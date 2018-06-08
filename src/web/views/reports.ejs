@@ -5,13 +5,13 @@
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <title>Reports - WRM2</title>
 
-        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+        <link rel="stylesheet" href="iconfont/material-icons.css">
         <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
         <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
     </head>
     <body style="margin: 10px;">
         <% include imports/header %>
-        <script src="https://cdn.rawgit.com/posva/vue-mdc/mdl/dist/vue-mdl.min.js"></script>
+        <script src="https://www.gitcdn.xyz/repo/posva/vue-mdc/mdl/dist/vue-mdl.min.js"></script>
         <div id="app">
             <div class="ticket" v-for="ticket in tickets">
                 <div class="userinfo">
@@ -35,7 +35,7 @@
                 <div class="buttons">
                     <mdl-button :id="'resolve'+ticket.message.id" icon="check" v-on:click.native="normalHandling('resolve', ticket.message.id)"><i class="material-icons">check</i></mdl-button>
                     <mdl-button :id="'falsify'+ticket.message.id" icon="close" v-on:click.native="normalHandling('falsify', ticket.message.id)"><i class="material-icons">close</i></mdl-button>
-                    <mdl-button :id="'move'+ticket.message.id" icon="arrow_right" v-on:click.native="normalHandling('move', ticket.message.id)"><i class="material-icons">arrow_right</i></mdl-button>
+                    <mdl-button :id="'move'+ticket.message.id" icon="arrow_forward" v-on:click.native="normalHandling('move', ticket.message.id)"><i class="material-icons">arrow_forward</i></mdl-button>
                     <mdl-button :id="'investigate'+ticket.message.id" icon="search" v-on:click.native="updateHandling('investigate', ticket.message.id)"><i class="material-icons">search</i></mdl-button>
                     <mdl-button :id="'delete'+ticket.message.id" icon="delete" v-on:click.native="normalHandling('delete', ticket.message.id)"><i class="material-icons">delete</i></mdl-button>
 
