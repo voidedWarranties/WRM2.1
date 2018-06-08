@@ -1,20 +1,20 @@
-const Discord = require("discord.js");
-const Commando = require("discord.js-commando");
-const path = require("path");
+import Discord from "discord.js";
+import Commando from "discord.js-commando";
+import path from "path";
 
-const config = require("./config.json");
+import config from "./config.json";
 
-const WebSocket = require("ws");
-const WebSocketServer = WebSocket.Server;
-const wsConnectionEvent = require("./ws_events/connection");
-const wsMessageEvent = require("./ws_events/message");
+import WebSocket, { Server as WebSocketServer } from "ws";
 
-const driver = require("./database/driver");
+import wsConnectionEvent from "./ws_events/connection";
+import wsMessageEvent from "./ws_events/message";
 
-const webServer = require("./web/index");
+import driver from "./database/driver";
+
+import webServer from "./web/index";
 
 // Events
-const messageReactionAdd = require("./events/messageReactionAdd");
+import messageReactionAdd from "./events/messageReactionAdd";
 
 const client = new Commando.Client({
     owner: config.owner_id,
@@ -56,7 +56,7 @@ client.on("ready", () => {
 
         console.log("WSS Init");
         client.on("messageReactionAdd", (messageReaction, user) => {
-            messageReactionAdd.event(client, wss, messageReaction, user);
+            messageReactionAdd(client, wss, messageReaction, user);
         });
         
         wss.on("connection", ws => {

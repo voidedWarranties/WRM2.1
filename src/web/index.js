@@ -1,19 +1,20 @@
-const http = require("http");
-const express = require("express");
-const session = require("express-session");
-const ejs = require("ejs");
+import http from "http";
+import express from "express";
+import session from "express-session";
+import ejs from "ejs";
 
-const path = require("path");
+import path from "path";
 
-const mongoose = require("mongoose");
-const mongooseSession = require("connect-mongo")(session);
+import mongoose from "mongoose";
+import connectmongo from "connect-mongo";
+const mongooseSession = connectmongo(session);
 
-const driver = require("../database/driver");
+import driver from "../database/driver";
 
-const passport = require("passport");
-const DiscordStrategy = require("passport-discord").Strategy;
+import passport from "passport";
+import { Strategy as DiscordStrategy } from "passport-discord";
 
-const config = require("../config.json");
+import config from "../config.json";
 
 const app = express();
 
@@ -69,7 +70,7 @@ module.exports = {
         passport.use(new DiscordStrategy({
             clientID: config.client_id,
             clientSecret: config.client_secret,
-            callbackURL: `${config.hosting_url}login/callback`,
+            callbackURL: `${config.hosting_url}/login/callback`,
             scope: scopes
         }, (accessToken, refreshToken, profile, done) => {
             process.nextTick(() => {

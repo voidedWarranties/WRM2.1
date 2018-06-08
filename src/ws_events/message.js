@@ -1,10 +1,10 @@
-const Ticket = require("../database/models/ticket");
+import Ticket from "../database/models/ticket";
 
-const findOneAndRemove = require("../util/findOneAndRemove");
+import findOneAndRemove from "../util/findOneAndRemove";
 
-const config = require("../config.json");
+import config from "../config.json";
 
-module.exports = async (client, message, wss) => {
+export default async (client, message, wss) => {
 
     message = JSON.parse(message);
 

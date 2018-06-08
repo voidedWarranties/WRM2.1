@@ -1,6 +1,6 @@
-const Ticket = require("../database/models/ticket");
+import Ticket from "../database/models/ticket";
 
-module.exports = (ws) => {
+export default ws => {
     Ticket.find({}, (err, tickets) => {
         ws.send(JSON.stringify({
             tickets: tickets,

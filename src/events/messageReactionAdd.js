@@ -1,20 +1,13 @@
-const WebSocket = require("ws");
-const getUrls = require("get-urls");
+import WebSocket from "ws";
+import getUrls from "get-urls";
 
-const config = require("../config.json")
+import config from "../config.json";
 
-const Ticket = require("../database/models/ticket");
-const findOne = require("../util/findOne");
-const findOneAndRemove = require("./../util/findOneAndRemove");
+import Ticket from "../database/models/ticket";
+import findOne from "../util/findOne";
+import findOneAndRemove from "../util/findOneAndRemove";
 
-// var wss;
-// var client;
-// exports.init = (client, wss) => {
-//     this.client = client;
-//     this.wss = wss;
-// }
-
-exports.event = async (client, wss, messageReaction, user) => {
+export default async (client, wss, messageReaction, user) => {
     var message = messageReaction.message;
     var emoji = messageReaction.emoji;
     var author = message.author;

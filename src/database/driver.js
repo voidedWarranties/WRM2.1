@@ -1,5 +1,5 @@
-const mongoose = require("mongoose");
-const config = require("./../config.json");
+import mongoose from "mongoose";
+import config from "../config.json";
 
 module.exports = {
     init: () => {
