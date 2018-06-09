@@ -47,7 +47,7 @@ export default class MarryCommand extends Command {
 
         var youser2 = new WRMUser({
             id: user.id
-        }).setPartner(user.id);
+        }).setPartner(msg.author.id);
         await youser2.save();
 
         msg.channel.send(`<@${msg.author.id}> has married <@${user.id}>`);
