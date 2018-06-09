@@ -12,5 +12,7 @@
     "socket_url": "localhost",
     "version": "2.0a",
     "wrm_rolename": "[Staff]",
-    "wrm_ticketchannel": "reports"
+    "wrm_ticketchannel": "reports",
+    "egg_enabled": true,
+    "egg_filename": "audio.ogg"
 }

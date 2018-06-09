@@ -61,3 +61,6 @@ typings/
 config.json
 
 dist/
+
+src/assets/audio/*
+!src/assets/audio/.gitkeep

@@ -15,6 +15,7 @@ import webServer from "./web/index";
 
 // Events
 import messageReactionAdd from "./events/messageReactionAdd";
+import voiceStateUpdate from "./events/voiceStateUpdate";
 
 const client = new Commando.Client({
     owner: config.owner_id,
@@ -69,5 +70,9 @@ client.on("ready", () => {
         });
     });
 });
+
+if(config.egg_enabled) {
+    client.on("voiceStateUpdate", voiceStateUpdate);
+}
 
 client.login(config.bot_token);
