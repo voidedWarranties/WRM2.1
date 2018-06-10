@@ -1,6 +1,15 @@
 language: node_js
 node_js:
-  - "node"
-  - "lts/*"
+- node
+- lts/*
 services:
-  - mongodb
+- mongodb
+env:
+  global:
+    secure: gc8t6P3ZqsDZzZdKAMA1NvKxE5rYfpWq9MYEjqf++jEg0MozVqkoqUGj9TBGL5dXEwSfTNXnZAcaQNLFkKc48KuFQ871OR6MXPgxdr6nro1kMolojFyChImGUODqDOelfpVfPMFMtbiJFU6Fl40IzW3eM9UWn6JUOkziHKWN6UVCbcUxqlOZi4Fhj7dJYtM4lXbm1tHrUPmTMoz9Bc7/crM2adfmaON7BoT7aBlr3N00szlCSCkoxAmx24WJai8s1fKNSzULtVgI7o+5KhbyVaM+Bj3AhoMEoSwicpkezjWPmT19unEEUXNyHcav4eCmS/vR65jXTZcYwVIi9S9lQtIr85NSY1EAbIWaFGJSe8IlLALxWDkwB3zSBGlcE/suE6rF6JUAQi6qH6rBUIWPM8cHN/9MWE8p/CoDd4XnqyadvdbNsOnV2eMF6qyCGVpSPCvQNN5fh9nL9644zXlRjFlNOH4RWFmoTaaDl0kgHvAb73NLIj3ZCgsl/0IcSTD44okr2m9oV5gRScB7W2CfHk69APCYgj6OD4oq6zaK2eBU+FjUPdqRL0lPpsILiRdsdEhMtP+ZQHdvA57rvTJbskiwk7G7RkZ2tZAc+esXDZzx8CCH/cr4LC2BO2BzGcyJbhYi5NTtcC+o/cBI05+NYeAY7ubL+lClS7Fk7rfHsVg=
+before_install:
+  - '[[ $(node -v) =~ ^v9.*$ ]] || npm install -g npm@latest' # skipped when using node 9
+  - npm install -g greenkeeper-lockfile
+install: npm install
+before_script: greenkeeper-lockfile-update
+after_script: greenkeeper-lockfile-upload
