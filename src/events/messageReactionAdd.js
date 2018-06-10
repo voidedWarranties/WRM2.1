@@ -31,8 +31,7 @@ export default async (client, wss, messageReaction, user) => {
                 author: {
                     username: author.username,
                     discriminator: author.discriminator,
-                    id: author.id,
-                    avatar: author.displayAvatarURL
+                    id: author.id
                 },
                 content: message.content,
                 urls: Array.from(getUrls(message.content)).length ? Array.from(getUrls(message.content)): null,
@@ -52,8 +51,7 @@ export default async (client, wss, messageReaction, user) => {
                 author: {
                     username: authorObj.username,
                     discriminator: authorObj.discriminator,
-                    id: authorObj.id,
-                    avatar: authorObj.avatar
+                    id: authorObj.id
                 },
                 content: messageObj.content,
                 urls: messageObj.urls,

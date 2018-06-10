@@ -3,6 +3,8 @@ import { RichEmbed } from "discord.js";
 
 import findOne from "../../util/findOne";
 
+import config from "../../config.json";
+
 export default class FindOneCommand extends Command {
     constructor(client) {
         super(client, {
@@ -27,7 +29,8 @@ export default class FindOneCommand extends Command {
             if(ticket) {
                 var embed = new RichEmbed();
                 var author = ticket.message.author;
-                embed.setAuthor(`${author.username}#${author.discriminator} (${author.id})`, author.avatar);
+                var authorAvatar = this.client.guilds.find("id", config.server_id).members.get(author.id).user.displayAvatarURL;
+                embed.setAuthor(`${author.username}#${author.discriminator} (${author.id})`, authorAvatar);
                 embed.setDescription(ticket.message.content);
                 embed.addField("Attachments", ticket.message.attachments ? ticket.message.attachments.join(", ") : "None");
                 embed.addField("URLS", ticket.message.urls ? ticket.message.urls.join(", ") : "None");

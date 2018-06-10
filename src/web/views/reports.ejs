@@ -14,42 +14,47 @@
         <script src="https://www.gitcdn.xyz/repo/posva/vue-mdc/mdl/dist/vue-mdl.min.js"></script>
         <div id="app">
             <div class="ticket" v-for="ticket in tickets">
-                <div class="userinfo">
-                    <img :src="ticket.message.author.avatar" style="border-radius: 100%; width: 32px; height: 32px; vertical-align: middle; display: inline;">
-                    <span>{{ ticket.message.author.username }}#{{ ticket.message.author.discriminator }} ({{ ticket.message.author.id }}):</span>
-                </div>
-
-                <p>{{ ticket.message.content }}</p>
-                <div class="url-images" v-if="ticket.message.urls">
-                    <div class="url-image" v-for="url in ticket.message.urls" v-if="url.endsWith('.jpg') || url.endsWith('.jpeg') || url.endsWith('.png') || url.endsWith('.gif')">
-                        <img :src="url" style="max-width: 500px;">
+                <mdl-card class="ticket-card" style="padding:16px; width:70%;" title="TITLE" subtitle="SUBTITLE" media="MEDIA" actions="ACTIONS">
+                    <div class="userinfo" :style="{ background: 'url(api/avatar/' + ticket.message.author.id + ') center / cover' }" slot="title">
+                        <img :src="'api/avatar/'+ticket.message.author.id" style="border-radius: 100%; border-style: solid; border-width:2px; margin: 5px; width: 32px; height: 32px; vertical-align: middle; display: inline;">
+                        <span>{{ ticket.message.author.username }}#{{ ticket.message.author.discriminator }} ({{ ticket.message.author.id }}):</span>
                     </div>
-                </div>
 
-                <div class="attachments" v-if="ticket.message.attachments">
-                    <div class="attachment-image" v-for="attachment in ticket.message.attachments">
-                        <img :src="attachment" style="max-width: 500px;">
+                    <p slot="subtitle">{{ ticket.message.content }}</p>
+                    <div slot="media">
+                        <div class="url-images" v-if="ticket.message.urls">
+                            <div class="url-image" v-for="url in ticket.message.urls" v-if="url.endsWith('.jpg') || url.endsWith('.jpeg') || url.endsWith('.png') || url.endsWith('.gif')">
+                                <img :src="url" style="max-width: 500px; margin: 10px;">
+                            </div>
+                        </div>
+
+                        <div class="attachments" v-if="ticket.message.attachments">
+                            <div class="attachment-image" v-for="attachment in ticket.message.attachments">
+                                <img :src="attachment" style="max-width: 500px; margin: 10px;">
+                            </div>
+                        </div>
                     </div>
-                </div>
 
-                <div class="buttons">
-                    <mdl-button :id="'resolve'+ticket.message.id" icon="check" v-on:click.native="normalHandling('resolve', ticket.message.id)"><i class="material-icons">check</i></mdl-button>
-                    <mdl-button :id="'falsify'+ticket.message.id" icon="close" v-on:click.native="normalHandling('falsify', ticket.message.id)"><i class="material-icons">close</i></mdl-button>
-                    <mdl-button :id="'move'+ticket.message.id" icon="arrow_forward" v-on:click.native="normalHandling('move', ticket.message.id)"><i class="material-icons">arrow_forward</i></mdl-button>
-                    <mdl-button :id="'investigate'+ticket.message.id" icon="search" v-on:click.native="updateHandling('investigate', ticket.message.id)"><i class="material-icons">search</i></mdl-button>
-                    <mdl-button :id="'delete'+ticket.message.id" icon="delete" v-on:click.native="normalHandling('delete', ticket.message.id)"><i class="material-icons">delete</i></mdl-button>
+                    <div class="buttons" slot="actions">
+                        <mdl-button :id="'resolve'+ticket.message.id" icon="check" v-on:click.native="normalHandling('resolve', ticket.message.id)"><i class="material-icons">check</i></mdl-button>
+                        <mdl-button :id="'falsify'+ticket.message.id" icon="close" v-on:click.native="normalHandling('falsify', ticket.message.id)"><i class="material-icons">close</i></mdl-button>
+                        <mdl-button :id="'move'+ticket.message.id" icon="arrow_forward" v-on:click.native="normalHandling('move', ticket.message.id)"><i class="material-icons">arrow_forward</i></mdl-button>
+                        <mdl-button :id="'investigate'+ticket.message.id" icon="search" v-on:click.native="updateHandling('investigate', ticket.message.id)"><i class="material-icons">search</i></mdl-button>
+                        <mdl-button :id="'delete'+ticket.message.id" icon="delete" v-on:click.native="normalHandling('delete', ticket.message.id)"><i class="material-icons">delete</i></mdl-button>
 
-                    <mdl-tooltip :target="'resolve'+ticket.message.id">Resolve</mdl-tooltip>
-                    <mdl-tooltip :target="'falsify'+ticket.message.id">Falsify</mdl-tooltip>
-                    <mdl-tooltip :target="'move'+ticket.message.id">Move to #general</mdl-tooltip>
-                    <mdl-tooltip :target="'investigate'+ticket.message.id">Investigate</mdl-tooltip>
-                    <mdl-tooltip :target="'delete'+ticket.message.id">Delete</mdl-tooltip>
-                </div>
-                <hr>
+                        <mdl-tooltip :target="'resolve'+ticket.message.id">Resolve</mdl-tooltip>
+                        <mdl-tooltip :target="'falsify'+ticket.message.id">Falsify</mdl-tooltip>
+                        <mdl-tooltip :target="'move'+ticket.message.id">Move to #general</mdl-tooltip>
+                        <mdl-tooltip :target="'investigate'+ticket.message.id">Investigate</mdl-tooltip>
+                        <mdl-tooltip :target="'delete'+ticket.message.id">Delete</mdl-tooltip>
+                    </div>
+                </mdl-card>
+                <br>
             </div>
         </div>
 
-        <script src="https://vuejs.org/js/vue.min.js"></script>
+        <!-- <script src="https://vuejs.org/js/vue.min.js"></script> -->
+        <script src="https://vuejs.org/js/vue.js"></script>
         <script>
             var socketURL = "<%= config.socket_url %>";
             var serverPort = "<%= config.server_port %>";

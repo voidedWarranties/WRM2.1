@@ -14,6 +14,8 @@ import driver from "../database/driver";
 import passport from "passport";
 import { Strategy as DiscordStrategy } from "passport-discord";
 
+import request from "snekfetch";
+
 import config from "../config.json";
 
 const app = express();
@@ -141,6 +143,11 @@ module.exports = {
                 authUser: req.isAuthenticated() ? getAuthUser(req.user) : null,
                 config
             });
+        });
+
+        app.get("/api/avatar/:user_id", (req, res) => {
+            var url = bot.guilds.find("id", config.server_id).members.get(req.params.user_id).user.displayAvatarURL;
+            request.get(url).pipe(res);
         });
 
         callback(server);

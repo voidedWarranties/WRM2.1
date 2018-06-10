@@ -5,8 +5,7 @@ const ticketSchema = new mongoose.Schema({
         author: {
             username: String,
             discriminator: String,
-            id: String,
-            avatar: String
+            id: String
         },
         content: String,
         urls: Array,
