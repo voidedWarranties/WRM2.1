@@ -16,6 +16,8 @@ import { Strategy as DiscordStrategy } from "passport-discord";
 
 import request from "snekfetch";
 
+import WRMUser from "../objects/user";
+
 import config from "../config.json";
 
 const app = express();
@@ -148,6 +150,11 @@ module.exports = {
         app.get("/api/avatar/:user_id", (req, res) => {
             var url = bot.guilds.find("id", config.server_id).members.get(req.params.user_id).user.displayAvatarURL;
             request.get(url).pipe(res);
+        });
+
+        app.get("/api/user/:user_id", async (req, res) => {
+            var user = await WRMUser.get(req.params.user_id);
+            res.json(user);
         });
 
         callback(server);
