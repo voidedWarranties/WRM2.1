@@ -13,7 +13,7 @@ export default async (client, wss, messageReaction, user) => {
     var author = message.author;
     var guild = message.guild;
 
-    var member = guild.members.find("id", user.id);
+    var member = guild.members.get(user.id);
 
     if(user === client.user) {
         return;

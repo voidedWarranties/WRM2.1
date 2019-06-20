@@ -1,4 +1,4 @@
 {
-    "presets": ["es2015-node"],
-    "plugins": ["add-module-exports", "transform-runtime"]
+    "presets": [["@babel/preset-env", { "exclude": ["transform-classes"] }]],
+    "plugins": ["add-module-exports", "@babel/plugin-transform-runtime"]
 }

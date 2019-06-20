@@ -27,11 +27,11 @@ export default class PlayFileCommand extends Command {
             console.log("Finding files in audio folder.");
             if(files.indexOf(string) > -1) {
                 console.log("File is valid.");
-                if(msg.member.voiceChannel) {
+                if(msg.member.voice.channel) {
                     console.log(`Playing: ${string}`);
-                    msg.member.voiceChannel.join().then(conn => {
+                    msg.member.voice.channel.join().then(conn => {
                         var readStream = fs.createReadStream(path.join(__dirname, `../../assets/audio/${string}`));
-                        var dispatcher = conn.playStream(readStream);
+                        var dispatcher = conn.play(readStream);
                         dispatcher.on("end", () => {
                             conn.disconnect();
                         });

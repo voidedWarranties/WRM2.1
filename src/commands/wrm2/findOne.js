@@ -29,7 +29,7 @@ export default class FindOneCommand extends Command {
             if(ticket) {
                 var embed = new RichEmbed();
                 var author = ticket.message.author;
-                var authorAvatar = this.client.guilds.find("id", config.server_id).members.get(author.id).user.displayAvatarURL;
+                var authorAvatar = this.client.guilds.find("id", config.server_id).members.get(author.id).user.displayAvatarURL();
                 embed.setAuthor(`${author.username}#${author.discriminator} (${author.id})`, authorAvatar);
                 embed.setDescription(ticket.message.content);
                 embed.addField("Attachments", ticket.message.attachments ? ticket.message.attachments.join(", ") : "None");

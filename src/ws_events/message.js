@@ -14,7 +14,7 @@ export default async (client, message, wss) => {
     const normalHandling = async (message, moji, messageToSend) => {
         findOneAndRemove(message.id).exec();
         message.reply(messageToSend);
-        await message.clearReactions();
+        await message.reactions.removeAll();
         await message.react(moji);
 
         // Broadcast to all clients that the message is being removed
@@ -25,7 +25,7 @@ export default async (client, message, wss) => {
     }
 
     if(message.type === "remove") {
-        channel.fetchMessage(message.id).then(async mmessage => {
+        channel.messages.fetch(message.id).then(async mmessage => {
             switch(message.action) {
                 case "resolve":
                     normalHandling(mmessage, "✅", `*Update*: Your ticket has been marked as \`solved\` by ${mmessage.author.tag}`)
@@ -38,7 +38,7 @@ export default async (client, message, wss) => {
                     break;
                 case "delete":
                     findOneAndRemove(mmessage.id).exec();
-                    await mmessage.clearReactions();
+                    await mmessage.reactions.removeAll();
                     wss.broadcast({
                         type: "remove",
                         id: message.id

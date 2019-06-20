@@ -123,7 +123,7 @@ module.exports = {
         app.get("/login/callback", passport.authenticate("discord", {
             failureRedirect: "/"
         }), (req, res) => {
-            if(req.user.id === config.owner_id || bot.guilds.find("id", config.server_id).members.find("id", req.user.id).roles.find("name", config.wrm_rolename)) {
+            if(req.user.id === config.owner_id || bot.guilds.get(config.server_id).members.get(req.user.id).roles.find("name", config.wrm_rolename)) {
                 res.redirect("/");
             } else {
                 req.logout();
@@ -148,7 +148,7 @@ module.exports = {
         });
 
         app.get("/api/avatar/:user_id", (req, res) => {
-            var url = bot.guilds.find("id", config.server_id).members.get(req.params.user_id).user.displayAvatarURL;
+            var url = bot.guilds.get(config.server_id).members.get(req.params.user_id).user.displayAvatarURL();
             request.get(url).pipe(res);
         });
 
