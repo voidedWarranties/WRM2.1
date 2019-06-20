@@ -123,7 +123,7 @@ module.exports = {
         app.get("/login/callback", passport.authenticate("discord", {
             failureRedirect: "/"
         }), (req, res) => {
-            if(req.user.id === config.owner_id || bot.guilds.get(config.server_id).members.get(req.user.id).roles.find("name", config.wrm_rolename)) {
+            if(req.user.id === config.owner_id || bot.guilds.get(config.server_id).members.get(req.user.id).roles.find(role => role.name === config.wrm_rolename)) {
                 res.redirect("/");
             } else {
                 req.logout();

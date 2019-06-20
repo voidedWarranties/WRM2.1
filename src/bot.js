@@ -28,11 +28,12 @@ client.on("ready", () => {
     console.log(`Invite me with: https://discordapp.com/oauth2/authorize?client_id=${client.user.id}&scope=bot&permissions=2146958591`);
 
     client.user.setPresence({
-        game: {
-            name: `${config.version}`,
-            url: "https://twitch.tv/"
+        status: "online",
+        activity: {
+            name: `Finally version ${config.version}`,
+            type: "PLAYING"
         }
-    });
+    }).then(console.error);
 
     client.registry
     .registerDefaultTypes()
@@ -55,6 +56,30 @@ client.on("ready", () => {
                 }
             });
         }
+
+        const events = {
+            MESSAGE_REACTION_ADD: 'messageReactionAdd',
+            MESSAGE_REACTION_REMOVE: 'messageReactionRemove',
+        };
+
+        // https://gist.github.com/Danktuary/27b3cef7ef6c42e2d3f5aff4779db8ba
+        
+        client.on('raw', async event => {
+            if (!events.hasOwnProperty(event.t)) return;
+            
+            const { d: data } = event;
+            const user = client.users.get(data.user_id);
+            const channel = client.channels.get(data.channel_id) || await user.createDM();
+            
+            if (channel.messages.has(data.message_id)) return;
+            
+            const message = await channel.messages.fetch(data.message_id);
+
+            const emojiKey = (data.emoji.id) ? `${data.emoji.name}:${data.emoji.id}` : data.emoji.name;
+            const reaction = message.reactions.get(emojiKey);
+        
+            client.emit(events[event.t], reaction, user);
+        });
 
         console.log("WSS Init");
         client.on("messageReactionAdd", (messageReaction, user) => {

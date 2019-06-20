@@ -49,7 +49,7 @@ export default async (client, message, wss) => {
 
     if(message.type === "update") {
         if(message.action === "investigate") {
-            channel.fetchMessage(message.id).then(async mmessage => {
+            channel.messages.fetch(message.id).then(async mmessage => {
                 mmessage.reply(`*Update*: Your ticket is currently \`under investigation\`, please be patient! -${mmessage.author.tag}`);
             });
         }

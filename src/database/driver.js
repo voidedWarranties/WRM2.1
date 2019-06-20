@@ -8,7 +8,8 @@ module.exports = {
             connectTimeoutMS: 30000,
             socketTimeoutMS: 30000,
             keepAlive: 120,
-            poolSize: 100
+            poolSize: 100,
+            useNewUrlParser: true
         });
     },
     getConnection: () => {

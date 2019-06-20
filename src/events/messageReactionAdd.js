@@ -18,7 +18,7 @@ export default async (client, wss, messageReaction, user) => {
     if(user === client.user) {
         return;
     }
-    if(!(user === message.author) && !(member.roles.find("name", config.wrm_rolename))) {
+    if(!(user === message.author) && !(member.roles.find(role => role.name === config.wrm_rolename))) {
         return;
     }
 
@@ -88,7 +88,7 @@ export default async (client, wss, messageReaction, user) => {
     const normalHandling = async (moji, messageToSend) => {
         findOneAndRemove(message.id).exec();
         message.reply(messageToSend);
-        await message.clearReactions();
+        await message.reactions.removeAll();
         await message.react(moji);
 
         wss.broadcast({
@@ -97,7 +97,7 @@ export default async (client, wss, messageReaction, user) => {
         });
     }
 
-    if(member.roles.find("name", config.wrm_rolename) && message.reactions.find(reaction => reaction.emoji.name === "🎫") && messageReaction.me) {
+    if(member.roles.find(role => role.name === config.wrm_rolename) && message.reactions.find(reaction => reaction.emoji.name === "🎫") && messageReaction.me) {
         switch(emoji.name) {
             case "✅":
                 normalHandling("✅", `*Update*: Your ticket has been marked as \`solved\` by ${user.tag}`);
@@ -114,7 +114,7 @@ export default async (client, wss, messageReaction, user) => {
                 break;
             case "❌":
                 findOneAndRemove(message.id).exec();
-                await message.clearReactions();
+                await message.reactions.removeAll();
 
                 wss.broadcast({
                     type: "remove",
